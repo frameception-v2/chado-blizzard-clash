@@ -17,19 +17,51 @@ import { createStore } from "mipd";
 import { Label } from "~/components/ui/label";
 import { PROJECT_TITLE } from "~/lib/constants";
 
-function ExampleCard() {
+interface TipState {
+  snowWarriorTotal: number;
+  fireWarriorTotal: number;
+  lastTipper?: string;
+  lastTipAmount?: number;
+}
+
+function BattleCard({ tipState, onTip }: { tipState: TipState; onTip: (warriorFid: number) => void }) {
   return (
     <Card className="border-neutral-200 bg-white">
       <CardHeader>
-        <CardTitle className="text-neutral-900">Welcome to the Frame Template</CardTitle>
+        <CardTitle className="text-neutral-900">Choose Your Champion!</CardTitle>
         <CardDescription className="text-neutral-600">
-          This is an example card that you can customize or remove
+          Tip your favorite warrior to support them in battle
         </CardDescription>
       </CardHeader>
-      <CardContent className="text-neutral-800">
-        <p>
-          Your frame content goes here. The text is intentionally dark to ensure good readability.
-        </p>
+      <CardContent className="text-neutral-800 space-y-4">
+        <div className="flex justify-between items-center">
+          <div className="text-center">
+            <h3 className="font-bold text-blue-600">{SNOW_WARRIOR_NAME}</h3>
+            <p className="text-sm">Total: {tipState.snowWarriorTotal} ETH</p>
+            <PurpleButton 
+              onClick={() => onTip(SNOW_WARRIOR_FID)}
+              className="mt-2 bg-blue-500 hover:bg-blue-600"
+            >
+              Tip Ice Warrior
+            </PurpleButton>
+          </div>
+          <div className="text-2xl font-bold">VS</div>
+          <div className="text-center">
+            <h3 className="font-bold text-red-600">{FIRE_WARRIOR_NAME}</h3>
+            <p className="text-sm">Total: {tipState.fireWarriorTotal} ETH</p>
+            <PurpleButton
+              onClick={() => onTip(FIRE_WARRIOR_FID)}
+              className="mt-2 bg-red-500 hover:bg-red-600"
+            >
+              Tip Fire Warrior
+            </PurpleButton>
+          </div>
+        </div>
+        {tipState.lastTipper && (
+          <p className="text-sm text-center mt-4">
+            Last tip: {tipState.lastTipAmount} ETH by {tipState.lastTipper}
+          </p>
+        )}
       </CardContent>
     </Card>
   );
@@ -40,6 +72,10 @@ export default function Frame(
 ) {
   const [isSDKLoaded, setIsSDKLoaded] = useState(false);
   const [context, setContext] = useState<Context.FrameContext>();
+  const [tipState, setTipState] = useState<TipState>({
+    snowWarriorTotal: 0,
+    fireWarriorTotal: 0
+  });
 
   const [added, setAdded] = useState(false);
 
@@ -137,7 +173,32 @@ export default function Frame(
     >
       <div className="w-[300px] mx-auto py-2 px-2">
         <h1 className="text-2xl font-bold text-center mb-4 text-neutral-900">{title}</h1>
-        <ExampleCard />
+        <BattleCard 
+          tipState={tipState}
+          onTip={async (warriorFid) => {
+            try {
+              // Here we would integrate with the tipping functionality
+              // This is a placeholder for the actual implementation
+              const tipAmount = MIN_TIP_AMOUNT;
+              const success = await sdk.actions.sendTransaction({
+                to: warriorFid === SNOW_WARRIOR_FID ? SNOW_WARRIOR_NAME : FIRE_WARRIOR_NAME,
+                value: tipAmount
+              });
+              
+              if (success) {
+                setTipState(prev => ({
+                  ...prev,
+                  [warriorFid === SNOW_WARRIOR_FID ? 'snowWarriorTotal' : 'fireWarriorTotal']: 
+                    prev[warriorFid === SNOW_WARRIOR_FID ? 'snowWarriorTotal' : 'fireWarriorTotal'] + tipAmount,
+                  lastTipper: context?.user?.username || 'Anonymous',
+                  lastTipAmount: tipAmount
+                }));
+              }
+            } catch (error) {
+              console.error('Tipping failed:', error);
+            }
+          }}
+        />
       </div>
     </div>
   );
