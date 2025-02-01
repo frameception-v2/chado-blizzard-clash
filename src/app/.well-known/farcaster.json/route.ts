@@ -5,11 +5,13 @@ export async function GET() {
 
   const config = {
     accountAssociation: {
-      header:
-        "eyJmaWQiOjM2MjEsInR5cGUiOiJjdXN0b2R5Iiwia2V5IjoiMHgyY2Q4NWEwOTMyNjFmNTkyNzA4MDRBNkVBNjk3Q2VBNENlQkVjYWZFIn0",
-      payload: "eyJkb21haW4iOiJmcmFtZXMtdjIudmVyY2VsLmFwcCJ9",
-      signature:
-        "MHhiNDIwMzQ1MGZkNzgzYTExZjRiOTllZTFlYjA3NmMwOTdjM2JkOTY1NGM2ODZjYjkyZTAyMzk2Y2Q0YjU2MWY1MjY5NjI5ZGQ5NTliYjU0YzEwOGI4OGVmNjdjMTVlZTdjZDc2YTRiMGU5NzkzNzA3YzkxYzFkOWFjNTg0YmQzNjFi",
+      message: {
+        domain: "blizzard-clash.vercel.app",
+        timestamp: 1738381349,
+        expirationTime: 1746157349
+      },
+      signature: "30ac278dcf4306876b37e6dec9beaa65636c4ecc4649af222d8b4d4a663b5fa67c7a6f41df80d9fd943249e5127a1c84d6828d1a4b9cf4e5bdd90fc71c4003371c",
+      signingKey: "bf061d683c519c27ff13d2c148f093433f39316b04907be3726bf26fdcd541e4"
     },
     frame: {
       version: "1",
