@@ -15,7 +15,14 @@ import { base, optimism } from "wagmi/chains";
 import { useSession } from "next-auth/react";
 import { createStore } from "mipd";
 import { Label } from "~/components/ui/label";
-import { PROJECT_TITLE } from "~/lib/constants";
+import { 
+  PROJECT_TITLE,
+  SNOW_WARRIOR_NAME,
+  FIRE_WARRIOR_NAME,
+  SNOW_WARRIOR_FID,
+  FIRE_WARRIOR_FID,
+  MIN_TIP_AMOUNT
+} from "~/lib/constants";
 
 interface TipState {
   snowWarriorTotal: number;
